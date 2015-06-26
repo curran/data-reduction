@@ -2,7 +2,14 @@
 
 A utility for reducing the size of data sets for visualization.
 
-The main goal of the this package is to unifying the aggregation computation behind visualizations including [Histogram](http://bl.ocks.org/mbostock/3048450), Heatmap, and Calendar View, and also provide the ability to dynamically filter what data gets included in the aggregation.
+The main goal of the this package is to unifying the aggregation computation behind visualizations including:
+
+ * [Histogram](http://bl.ocks.org/mbostock/3048450)
+ * [Heatmap](http://bl.ocks.org/mbostock/3202354)
+ * [Calendar View](http://bl.ocks.org/mbostock/4063318), 
+ * [http://bl.ocks.org/mbostock/582915](http://bl.ocks.org/mbostock/582915)
+ 
+Also, this package provides the ability to dynamically filter the data before aggregation, which is a common need for linked interactive visualizations.
 
 ## Use Cases
 
@@ -17,11 +24,15 @@ A heat map where the user can select two columns to aggregate by, each of which 
 
 A calendar view where the user can select which column to sum to compute the value for each day.
 
+Linked views where clicking on a bar in a bar chart will filter the data used as input to another bar chart.
+
+[Linked Choropleth Map and Line Chart](http://curran.github.io/model/examples/d3LinkedChoropleth/)
+
 ## Related Work
 
+ * [Crossfilter](http://square.github.io/crossfilter/)
  * [d3 Histogram](http://bl.ocks.org/mbostock/3048450)
  * [d3 Histogram Layout](https://github.com/mbostock/d3/blob/master/src/layout/histogram.js)
  * [Heatmap (2D Histogram, CSV)](http://bl.ocks.org/mbostock/3202354)
  * [d3-arrays#nest](https://github.com/d3/d3-arrays#nest)
- * [Crossfilter](http://square.github.io/crossfilter/)
  * [dc.js](https://dc-js.github.io/dc.js/)
