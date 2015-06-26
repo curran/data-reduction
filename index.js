@@ -64,21 +64,27 @@ function makeRow(d, dimensions){
 
 // Implements a filter -> aggregate data flow.
 function dataReduction(data, options){
+
+  var metadata = {};
+
   if("filter" in options){
     data = filter(data, options.filter);
   }
 
   if("aggregate" in options){
     options.aggregate.dimensions.forEach(function (dimension){
+
       dimension.accessor = accessor(dimension.column);
 
       if(dimension.histogram){
 
         var count = dimension.numBins + 1;
+
         var ticks = linear()
           .domain(extent(data, dimension.accessor))
           .nice(count)
           .ticks(count);
+
         var n = ticks.length - 1;
         var min = ticks[0];
         var max = ticks[n];
@@ -86,18 +92,27 @@ function dataReduction(data, options){
         var step = span / n;
 
         var rawAccessor = dimension.accessor;
+
         var binAccessor = function(d){
           var value = rawAccessor(d);
           var normalized = (value - min) / span; // Varies between 0 and 1
           var i = Math.floor(normalized * n);
           return ticks[i];
         };
+
         dimension.accessor = binAccessor;
+
+        // The step metadata is exported for a HeatMap implementation to use.
+        // see https://gist.github.com/mbostock/3202354#file-index-html-L42
+        metadata[dimension.column] = { step: step };
+
       }
     });
     data = aggregate(data, options.aggregate);
   }
+  data.metadata = metadata;
   return data;
 };
+
 
 export default dataReduction;

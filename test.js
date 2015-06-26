@@ -115,6 +115,9 @@ describe("plugins/dataReduction", function () {
       }
     });
 
+    assert.equal(result.metadata.bar.step, 2);
+
+    delete result.metadata;
     assert.deepEqual(result, [
       { bar: 0, total: 2 },
       { bar: 2, total: 2 },
