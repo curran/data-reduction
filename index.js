@@ -1,4 +1,6 @@
-import ticks from "ticks";
+import { linear } from "d3-scale";
+import accessor from "column-accessor";
+import { extent } from "d3-arrays";
 
 function filter(data, predicates){
   predicates.forEach(function (predicate){
@@ -47,23 +49,15 @@ function aggregate(data, options){
 }
 
 function makeKey(d, dimensions){
-  // TODO optimize
   return dimensions.map(function (dimension){
-    return d[dimension.column];
+    return dimension.accessor(d);
   }).join(";");
 }
 
 function makeRow(d, dimensions){
-
-  // TODO implement histogram dimensions using ticks
-  //if(dimension.histogram){
-  //  //dimension.histogram.numBins
-  //  //dimension.histogram.niceBins // Boolean
-  //}
-
   var row = {};
   dimensions.forEach(function (dimension){
-    row[dimension.column] = d[dimension.column];
+    row[dimension.column] = dimension.accessor(d);
   });
   return row;
 }
@@ -73,7 +67,34 @@ function dataReduction(data, options){
   if("filter" in options){
     data = filter(data, options.filter);
   }
+
   if("aggregate" in options){
+    options.aggregate.dimensions.forEach(function (dimension){
+      dimension.accessor = accessor(dimension.column);
+
+      if(dimension.histogram){
+
+        var count = dimension.numBins + 1;
+        var ticks = linear()
+          .domain(extent(data, dimension.accessor))
+          .nice(count)
+          .ticks(count);
+        var n = ticks.length - 1;
+        var min = ticks[0];
+        var max = ticks[n];
+        var span = max - min;
+        var step = span / n;
+
+        var rawAccessor = dimension.accessor;
+        var binAccessor = function(d){
+          var value = rawAccessor(d);
+          var normalized = (value - min) / span; // Varies between 0 and 1
+          var i = Math.floor(normalized * n);
+          return ticks[i];
+        };
+        dimension.accessor = binAccessor;
+      }
+    });
     data = aggregate(data, options.aggregate);
   }
   return data;

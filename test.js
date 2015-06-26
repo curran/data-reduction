@@ -65,40 +65,64 @@ describe("plugins/dataReduction", function () {
     });
     assert.equal(result.length, 1);
   });
-});
 
-var data2 = [
-  { foo: "A", bar: 1 },
-  { foo: "A", bar: 8 },
-  { foo: "A", bar: 6 }, // A sum = 15, count = 3
-  { foo: "B", bar: 4 },
-  { foo: "B", bar: 3 }, // B sum = 7, count = 2
-  { foo: "C", bar: 6 },
-  { foo: "C", bar: 1 },
-  { foo: "C", bar: 3 },
-  { foo: "C", bar: 6 },
-  { foo: "C", bar: 4 } // C sum = 20, count = 5
-];
+  var data2 = [
+    { foo: "A", bar: 1 },
+    { foo: "A", bar: 8 },
+    { foo: "A", bar: 6 }, // A sum = 15, count = 3
+    { foo: "B", bar: 4 },
+    { foo: "B", bar: 3 }, // B sum = 7, count = 2
+    { foo: "C", bar: 6 },
+    { foo: "C", bar: 1 },
+    { foo: "C", bar: 3 },
+    { foo: "C", bar: 6 },
+    { foo: "C", bar: 4 } // C sum = 20, count = 5
+  ];
 
-it("should compute aggregate (count)", function() {
-  var result = dataReduction(data2, {
-    aggregate: {
-      dimensions: [{
-        column: "foo"
-      }],
-      measures: [{
-        outColumn: "total", 
-        operator: "count"
-      }]
-    }
+  it("should aggregate (count) over categories", function() {
+    var result = dataReduction(data2, {
+      aggregate: {
+        dimensions: [{
+          column: "foo"
+        }],
+        measures: [{
+          outColumn: "total", 
+          operator: "count"
+        }]
+      }
+    });
+
+    assert.equal(result.length, 3);
+
+    assert.equal(where(result, "foo", "A")[0].total, 3);
+    assert.equal(where(result, "foo", "B")[0].total, 2);
+    assert.equal(where(result, "foo", "C")[0].total, 5);
+    assert.equal(where(result, "foo", "A")[0].total, 3);
   });
 
-  assert.equal(result.length, 3);
+  it("should aggregate (count) over nice histogram bins", function() {
+    var result = dataReduction(data2, {
+      aggregate: {
+        dimensions: [{
+          column: "bar",
+          histogram: true,
+          numBins: 3
+        }],
+        measures: [{
+          outColumn: "total", 
+          operator: "count"
+        }]
+      }
+    });
 
-  assert.equal(where(result, "foo", "A")[0].total, 3);
-  assert.equal(where(result, "foo", "B")[0].total, 2);
-  assert.equal(where(result, "foo", "C")[0].total, 5);
-  assert.equal(where(result, "foo", "A")[0].total, 3);
+    assert.deepEqual(result, [
+      { bar: 0, total: 2 },
+      { bar: 2, total: 2 },
+      { bar: 4, total: 2 },
+      { bar: 6, total: 3 },
+      { bar: 8, total: 1 }
+    ]);
+  });
 });
 
 function where(data, column, value){
