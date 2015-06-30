@@ -5,8 +5,10 @@ A utility for reducing the size of data sets for visualization.
 The main goal of the this package is to unifying the aggregation computation behind visualizations including:
 
  * [Histogram](http://bl.ocks.org/mbostock/3048450)
+ * [Bar Chart](http://bl.ocks.org/mbostock/3885304)
  * [Heatmap](http://bl.ocks.org/mbostock/3202354)
- * [Calendar View](http://bl.ocks.org/mbostock/4063318), 
+ * [Day / Hour Heatmap](http://bl.ocks.org/tjdecke/5558084)
+ * [Calendar View](http://bl.ocks.org/mbostock/4063318)
  * [Stream Graph](http://bl.ocks.org/mbostock/582915)
  
 Also, this package provides the ability to dynamically filter the data before aggregation, which is a common need for linked interactive visualizations.
