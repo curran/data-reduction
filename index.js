@@ -97,6 +97,13 @@ function dataReduction(data, options){
           var value = rawAccessor(d);
           var normalized = (value - min) / span; // Varies between 0 and 1
           var i = Math.floor(normalized * n);
+
+          // Handle the special case of the max value,
+          // making the last bin inclusive of the max.
+          if( i === n ){
+            i--;
+          }
+
           return ticks[i];
         };
 

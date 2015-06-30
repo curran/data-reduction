@@ -122,8 +122,7 @@ describe("plugins/dataReduction", function () {
       { bar: 0, total: 2 },
       { bar: 2, total: 2 },
       { bar: 4, total: 2 },
-      { bar: 6, total: 3 },
-      { bar: 8, total: 1 }
+      { bar: 6, total: 4 }
     ]);
   });
 });
