@@ -125,6 +125,28 @@ describe("plugins/dataReduction", function () {
       { bar: 6, total: 4 }
     ]);
   });
+
+  it("should aggregate (count) over distinct numeric values", function() {
+    var result = dataReduction(data2, {
+      aggregate: {
+        dimensions: [{
+          column: "bar"
+        }],
+        measures: [{
+          outColumn: "total", 
+          operator: "count"
+        }]
+      }
+    });
+
+    assert.equal(result.length, 5);
+
+    assert.equal(where(result, "bar", 1)[0].total, 2);
+    assert.equal(where(result, "bar", 3)[0].total, 2);
+    assert.equal(where(result, "bar", 4)[0].total, 2);
+    assert.equal(where(result, "bar", 6)[0].total, 3);
+    assert.equal(where(result, "bar", 8)[0].total, 1);
+  });
 });
 
 function where(data, column, value){
