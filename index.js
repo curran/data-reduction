@@ -126,8 +126,11 @@ function dataReduction(data, options){
     });
     data = aggregate(data, options.aggregate);
   }
-  data.metadata = metadata;
-  return data;
+
+  return {
+    data: data,
+    metadata: metadata
+  };
 };
 
 

@@ -29,7 +29,7 @@ describe("data-reduction", function () {
         { column: "x", min: 5 }
       ]
     });
-    assert.equal(result.length, 2);
+    assert.equal(result.data.length, 2);
   });
 
   it("should compute filter (min, multiple fields)", function() {
@@ -39,7 +39,7 @@ describe("data-reduction", function () {
         { column: "y", min: 2 }
       ]
     });
-    assert.equal(result.length, 2);
+    assert.equal(result.data.length, 2);
   });
 
   it("should compute filter (max)", function() {
@@ -48,7 +48,7 @@ describe("data-reduction", function () {
         { column: "x", max: 3 }
       ]
     });
-    assert.equal(result.length, 1);
+    assert.equal(result.data.length, 1);
   });
 
   it("should compute filter (max, inclusive)", function() {
@@ -57,7 +57,7 @@ describe("data-reduction", function () {
         { column: "x", max: 5 }
       ]
     });
-    assert.equal(result.length, 3);
+    assert.equal(result.data.length, 3);
   });
 
   it("should compute filter (min & max)", function() {
@@ -66,7 +66,7 @@ describe("data-reduction", function () {
         { column: "x", min: 2, max: 6 }
       ]
     });
-    assert.equal(result.length, 2);
+    assert.equal(result.data.length, 2);
   });
 
   it("should compute filter (min & max, multiple fields)", function() {
@@ -76,7 +76,7 @@ describe("data-reduction", function () {
         { column: "y", min: 6, max: 9 }
       ]
     });
-    assert.equal(result.length, 1);
+    assert.equal(result.data.length, 1);
   });
 
   it("should compute filter (equal)", function() {
@@ -85,9 +85,9 @@ describe("data-reduction", function () {
         { column: "bar", equal: "6" }
       ]
     });
-    assert.equal(result.length, 3);
-    assert("foo" in result[0]);
-    assert("bar" in result[0]);
+    assert.equal(result.data.length, 3);
+    assert("foo" in result.data[0]);
+    assert("bar" in result.data[0]);
   });
 
   it("should aggregate (count) over categories", function() {
@@ -103,7 +103,7 @@ describe("data-reduction", function () {
       }
     });
 
-    assert.equal(result.length, 3);
+    assert.equal(result.data.length, 3);
 
     assert.equal(where(result, "foo", "A")[0].total, 3);
     assert.equal(where(result, "foo", "B")[0].total, 2);
@@ -128,8 +128,7 @@ describe("data-reduction", function () {
 
     assert.equal(result.metadata.bar.step, 2);
 
-    delete result.metadata;
-    assert.deepEqual(result, [
+    assert.deepEqual(result.data, [
       { bar: 0, total: 2 },
       { bar: 2, total: 2 },
       { bar: 4, total: 2 },
@@ -150,7 +149,7 @@ describe("data-reduction", function () {
       }
     });
 
-    assert.equal(result.length, 5);
+    assert.equal(result.data.length, 5);
 
     assert.equal(where(result, "bar", 1)[0].total, 2);
     assert.equal(where(result, "bar", 3)[0].total, 2);
@@ -160,8 +159,8 @@ describe("data-reduction", function () {
   });
 });
 
-function where(data, column, value){
-  return data.filter(function (d) {
+function where(result, column, value){
+  return result.data.filter(function (d) {
     return d[column] === value;
   });
 }
