@@ -2,6 +2,23 @@
 
 A utility for reducing the size of data sets for visualization.
 
+One of the most common challenges in data visualization is handling a large amount of data. There have been many discussions on the [D3 mailing list](https://groups.google.com/forum/#!forum/d3-js) about this topic: ["Building d3 charts with millions of data"](https://groups.google.com/forum/#!topic/d3-js/4XVPP5zaR5E), ["200MB data to browser with D3?"](https://groups.google.com/forum/#!topic/d3-js/UsqwkrXbSrg), ["Creating chart using d3 with more than thousand records"](), ["data visualization of 100 millions of record"](https://groups.google.com/forum/#!searchin/d3-js/imMens/d3-js/ix58Fu_5eLY/E3ClEWnIneYJ) and ["D3JS to visualize BIG DATA"](https://groups.google.com/forum/#!searchin/d3-js/imMens/d3-js/aRKFtUaE5h4/mDGgiBUMtokJ).
+
+There are two main approaches to solve the problem of "Big Data Visualization":
+
+ * push the limits of graphics technology to directly visualize millions of records, or
+ * use some kind of data reduction approach to summarize the data.
+
+Pushing the limits of technology using techniques like [progressive rendering](http://bl.ocks.org/syntagmatic/raw/3341641/) or [WebGL](http://engineering.ayasdi.com/2015/01/09/converting-a-d3-visualization-to-webgl-how-and-why/) is advocated and practiced by many people, however for information visualization, I would argue that this approach in general does not make sense.
+
+Think about it like this: if there are more data points than pixels, can you really perceive all of the data by plotting one mark per data points? If you cannot perceive all of the marks, are they worth rendering?
+
+The second approach is to use data reduction techniques to reduce the data before rendering it. The idea behind this is to preserve all of the interesting structures in the data that you would perceive if you did plot all of the records, while reducing the number of marks that need to be rendered. The paper [imMens: Real-time Visual Querying of Big Data] contains a great overview of data reduction methods (Section 3).
+
+**The purpose of this library is to provide data reduction functionality using filtering and binned aggregation.**
+
+## Use Cases
+
 The main goal of the this package is to unifying the aggregation computation behind visualizations including:
 
  * [Histogram](http://bl.ocks.org/mbostock/3048450)
@@ -12,8 +29,6 @@ The main goal of the this package is to unifying the aggregation computation beh
  * [Stream Graph](http://bl.ocks.org/mbostock/582915)
  
 Also, this package provides the ability to dynamically filter the data before aggregation, which is a common need for linked interactive visualizations.
-
-## Use Cases
 
 A frequency chart (bar chart or histogram) where the user can select which column of the data to represent with bars.
 
