@@ -20,6 +20,109 @@ The second approach is to use data reduction techniques to reduce the data befor
 
 This library exposes JavaScript implementations for **filtering** and **binned aggregation**.
 
+## Usage
+
+Install via [NPM](https://www.npmjs.com/): `npm install data-reduction`
+
+Require in your code: `var dataReduction = require("data-reduction");`
+
+Here's an example that shows the filtering functionality:
+
+var data1 = [
+  { x: 1, y: 3 },
+  { x: 5, y: 9 },
+  { x: 9, y: 5 },
+  { x: 4, y: 0 }
+];
+
+// Filters rows where x > 5
+var result = dataReduction(data1, {
+  filter: [
+    { column: "x", min: 5 }
+  ]
+});
+
+console.log(result);
+```
+
+The following JSON is printed:
+
+```json
+[
+  { x: 5, y: 9 },
+  { x: 9, y: 5 }
+]
+```
+
+The following filter calls are also valid:
+
+```javascript
+// Filters rows where x < 3
+var result = dataReduction(data1, {
+  filter: [
+    { column: "x", max: 3 }
+  ]
+});
+
+// Use min and max together
+var result = dataReduction(data1, {
+  filter: [
+    { column: "x", min: 2, max: 6 }
+  ]
+});
+
+// Use equal to match exact values.
+var result = dataReduction(data1, {
+  filter: [
+    { column: "x", equal: 5 }
+  ]
+});
+```
+
+Here's an example that does aggregation:
+
+```javascript
+var data2 = [
+  { foo: "A", bar: 1 },
+  { foo: "A", bar: 8 },
+  { foo: "A", bar: 6 }, // A sum = 15, count = 3
+  { foo: "B", bar: 4 },
+  { foo: "B", bar: 3 }, // B sum = 7, count = 2
+  { foo: "C", bar: 6 },
+  { foo: "C", bar: 1 },
+  { foo: "C", bar: 3 },
+  { foo: "C", bar: 6 },
+  { foo: "C", bar: 4 } // C sum = 20, count = 5
+];
+
+var result = dataReduction(data2, {
+  aggregate: {
+    dimensions: [{
+      column: "foo"
+    }],
+    measures: [{
+      outColumn: "total", 
+      operator: "count"
+    }]
+  }
+});
+console.log(result);
+```
+
+The following JSON is printed:
+
+```json
+[
+  { foo: 'A', total: 3 },
+  { foo: 'B', total: 2 },
+  { foo: 'C', total: 5 }
+]
+```
+
+Filter and aggregation can be specified together, in which case the filtering is applied first, then the aggregation.
+
+For more examples see the [unit tests](test.js).
+
 ## Use Cases
 
 The main goal of the this package is to unifying the aggregation computation behind visualizations including:
