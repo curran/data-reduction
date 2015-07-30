@@ -1,6 +1,6 @@
 # data-reduction
 
-A utility for reducing the size of data sets for visualization.
+A utility for reducing the size of data sets for visualization. This library provides data reduction functionality using filtering and binned aggregation.
 
 One of the most common challenges in data visualization is handling a large amount of data. There have been many discussions on the [D3 mailing list](https://groups.google.com/forum/#!forum/d3-js) about this topic: ["Building d3 charts with millions of data"](https://groups.google.com/forum/#!topic/d3-js/4XVPP5zaR5E), ["200MB data to browser with D3?"](https://groups.google.com/forum/#!topic/d3-js/UsqwkrXbSrg), ["Creating chart using d3 with more than thousand records"](), ["data visualization of 100 millions of record"](https://groups.google.com/forum/#!searchin/d3-js/imMens/d3-js/ix58Fu_5eLY/E3ClEWnIneYJ) and ["D3JS to visualize BIG DATA"](https://groups.google.com/forum/#!searchin/d3-js/imMens/d3-js/aRKFtUaE5h4/mDGgiBUMtokJ).
 
@@ -13,9 +13,14 @@ Pushing the limits of technology using techniques like [progressive rendering](h
 
 Think about it like this: if there are more data points than pixels, can you really perceive all of the data by plotting one mark per data points? If you cannot perceive all of the marks, are they worth rendering?
 
-The second approach is to use data reduction techniques to reduce the data before rendering it. The idea behind this is to preserve all of the interesting structures in the data that you would perceive if you did plot all of the records, while reducing the number of marks that need to be rendered. The paper [imMens: Real-time Visual Querying of Big Data] contains a great overview of data reduction methods (Section 3).
+The second approach is to use data reduction techniques to reduce the data before rendering it. The idea behind this is to preserve all of the interesting structures in the data that you would perceive if you did plot all of the records, while reducing the number of marks that need to be rendered. The paper [imMens: Real-time Visual Querying of Big Data] contains a great overview of data reduction methods (Section 3), which includes
 
-**The purpose of this library is to provide data reduction functionality using filtering and binned aggregation.**
+ * Filtering - only show data that fall within certain data ranges (e.g. filter by a limited time range)
+ * Sampling - only show a random subset of the data (e.g. include each data point with a 10% chance)
+ * Binned Aggregation - compute aggregated values (e.g. sum or average) over windows of the data space (e.g. count of events per day)
+ * Model Based Abstraction - only show summaries of the data computed by statistical (or other) models (e. g. show the mean and variance of a normal distribution rather than all the points).
+
+This library exposes JavaScript implementations for **filtering** and **binned aggregation**.
 
 ## Use Cases
 
