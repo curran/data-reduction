@@ -4,19 +4,23 @@ import { extent } from "d3-arrays";
 
 function filter(data, predicates){
   predicates.forEach(function (predicate){
+    var column = predicate.column;
     if("min" in predicate){
+      var min = predicate.min;
       data = data.filter(function (d){
-        return d[predicate.column] >= predicate.min;
+        return d[column] >= min;
       });
     }
     if("max" in predicate){
+      var max = predicate.max;
       data = data.filter(function (d){
-        return d[predicate.column] <= predicate.max;
+        return d[column] <= max;
       });
     }
     if("equal" in predicate){
+      var equal = predicate.equal;
       data = data.filter(function (d){
-        return d[predicate.column] == predicate.equal;
+        return d[column] == equal;
       });
     }
   });
