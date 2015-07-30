@@ -15,10 +15,10 @@ Think about it like this: if there are more data points than pixels, can you rea
 
 The second approach is to use data reduction techniques to reduce the data before rendering it. The idea behind this is to preserve all of the interesting structures in the data that you would perceive if you did plot all of the records, while reducing the number of marks that need to be rendered. The paper [imMens: Real-time Visual Querying of Big Data] contains a great overview of data reduction methods (Section 3), which includes
 
- * Filtering - only show data that fall within certain data ranges (e.g. filter by a limited time range)
- * Sampling - only show a random subset of the data (e.g. include each data point with a 10% chance)
- * Binned Aggregation - compute aggregated values (e.g. sum or average) over windows of the data space (e.g. count of events per day)
- * Model Based Abstraction - only show summaries of the data computed by statistical (or other) models (e. g. show the mean and variance of a normal distribution rather than all the points).
+ * filtering - show data that fall within certain data intervals (e.g. filter by a limited time range)
+ * sampling - show a random subset of the data
+ * binned aggregation - compute aggregated values over bins of the data space (e.g. count per day)
+ * model-based abstraction - show summaries of the data computed by statistical (or other) models (e. g. show the mean and variance of a normal distribution rather than all the points).
 
 This library exposes JavaScript implementations for **filtering** and **binned aggregation**.
 
