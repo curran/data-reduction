@@ -14,6 +14,11 @@ function filter(data, predicates){
         return d[predicate.column] <= predicate.max;
       });
     }
+    if("equal" in predicate){
+      data = data.filter(function (d){
+        return d[predicate.column] == predicate.equal;
+      });
+    }
   });
   return data;
 }

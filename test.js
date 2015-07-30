@@ -1,13 +1,26 @@
 var dataReduction = require("./data-reduction");
 var assert = require("assert");
 
-describe("plugins/dataReduction", function () {
+describe("data-reduction", function () {
 
   var data1 = [
     { x: 1, y: 3 },
     { x: 5, y: 9 },
     { x: 9, y: 5 },
     { x: 4, y: 0 }
+  ];
+
+  var data2 = [
+    { foo: "A", bar: 1 },
+    { foo: "A", bar: 8 },
+    { foo: "A", bar: 6 }, // A sum = 15, count = 3
+    { foo: "B", bar: 4 },
+    { foo: "B", bar: 3 }, // B sum = 7, count = 2
+    { foo: "C", bar: 6 },
+    { foo: "C", bar: 1 },
+    { foo: "C", bar: 3 },
+    { foo: "C", bar: 6 },
+    { foo: "C", bar: 4 } // C sum = 20, count = 5
   ];
 
   it("should compute filter (min, inclusive)", function() {
@@ -66,18 +79,16 @@ describe("plugins/dataReduction", function () {
     assert.equal(result.length, 1);
   });
 
-  var data2 = [
-    { foo: "A", bar: 1 },
-    { foo: "A", bar: 8 },
-    { foo: "A", bar: 6 }, // A sum = 15, count = 3
-    { foo: "B", bar: 4 },
-    { foo: "B", bar: 3 }, // B sum = 7, count = 2
-    { foo: "C", bar: 6 },
-    { foo: "C", bar: 1 },
-    { foo: "C", bar: 3 },
-    { foo: "C", bar: 6 },
-    { foo: "C", bar: 4 } // C sum = 20, count = 5
-  ];
+  it("should compute filter (equal)", function() {
+    var result = dataReduction(data2, {
+      filter: [
+        { column: "bar", equal: "6" }
+      ]
+    });
+    assert.equal(result.length, 3);
+    assert("foo" in result[0]);
+    assert("bar" in result[0]);
+  });
 
   it("should aggregate (count) over categories", function() {
     var result = dataReduction(data2, {
