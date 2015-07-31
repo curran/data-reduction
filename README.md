@@ -116,9 +116,9 @@ The following JSON is printed:
 
 ```json
 [
-  { foo: "A", total: 3 },
-  { foo: "B", total: 2 },
-  { foo: "C", total: 5 }
+  { "foo": "A", "total": 3 },
+  { "foo": "B", "total": 2 },
+  { "foo": "C", "total": 5 }
 ]
 ```
 
