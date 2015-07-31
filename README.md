@@ -1,5 +1,7 @@
 # data-reduction
 
+[![Build Status](https://travis-ci.org/curran/data-reduction.svg)](https://travis-ci.org/curran/data-reduction)
+
 A utility for reducing the size of data sets for visualization. This library provides data reduction functionality using filtering and binned aggregation.
 
 One of the most common challenges in data visualization is handling a large amount of data. There have been many discussions on the [D3 mailing list](https://groups.google.com/forum/#!forum/d3-js) about this topic: ["Building d3 charts with millions of data"](https://groups.google.com/forum/#!topic/d3-js/4XVPP5zaR5E), ["200MB data to browser with D3?"](https://groups.google.com/forum/#!topic/d3-js/UsqwkrXbSrg), ["Creating chart using d3 with more than thousand records"](), ["data visualization of 100 millions of record"](https://groups.google.com/forum/#!searchin/d3-js/imMens/d3-js/ix58Fu_5eLY/E3ClEWnIneYJ) and ["D3JS to visualize BIG DATA"](https://groups.google.com/forum/#!searchin/d3-js/imMens/d3-js/aRKFtUaE5h4/mDGgiBUMtokJ).
@@ -28,6 +30,7 @@ Require in your code: `var dataReduction = require("data-reduction");`
 
 Here's an example that shows the filtering functionality:
 
+```javascript
 var data1 = [
   { x: 1, y: 3 },
   { x: 5, y: 9 },
@@ -49,8 +52,8 @@ The following JSON is printed:
 
 ```json
 [
-  { x: 5, y: 9 },
-  { x: 9, y: 5 }
+  { "x": 5, "y": 9 },
+  { "x": 9, "y": 5 }
 ]
 ```
 
@@ -113,9 +116,9 @@ The following JSON is printed:
 
 ```json
 [
-  { foo: 'A', total: 3 },
-  { foo: 'B', total: 2 },
-  { foo: 'C', total: 5 }
+  { foo: "A", total: 3 },
+  { foo: "B", total: 2 },
+  { foo: "C", total: 5 }
 ]
 ```
 
