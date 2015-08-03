@@ -156,6 +156,7 @@ Linked views where clicking on a bar in a bar chart will filter the data used as
 
 ## Related Work
 
+ * [Datalib](git@github.com:vega/datalib.git)
  * [Crossfilter](http://square.github.io/crossfilter/)
  * [d3 Histogram](http://bl.ocks.org/mbostock/3048450)
  * [d3 Histogram Layout](https://github.com/mbostock/d3/blob/master/src/layout/histogram.js)
