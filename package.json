@@ -5,7 +5,7 @@
   "jsnext:main": "index.js",
   "main": "data-reduction.js",
   "scripts": {
-    "pretest": "rollup --format=cjs --output data-reduction.js index.js",
+    "pretest": "rollup --format=umd --name DataReduction --output data-reduction.js index.js",
     "test": "mocha",
     "prepublish": "npm run test"
   },
