@@ -1,6 +1,6 @@
 {
   "name": "data-reduction",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A library for reducing the size of data sets for visualization.",
   "jsnext:main": "index.js",
   "main": "data-reduction.js",
