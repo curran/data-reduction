@@ -1,6 +1,4 @@
-import { linear } from "d3-scale";
-import accessor from "column-accessor";
-import { extent } from "d3-arrays";
+var d3 = require("d3");
 
 function filter(data, predicates){
   predicates.forEach(function (predicate){
@@ -89,8 +87,8 @@ function dataReduction(data, options){
 
         var count = dimension.numBins + 1;
 
-        var ticks = linear()
-          .domain(extent(data, dimension.accessor))
+        var ticks = d3.scale.linear()
+          .domain(d3.extent(data, dimension.accessor))
           .nice(count)
           .ticks(count);
 
@@ -140,5 +138,10 @@ function dataReduction(data, options){
   };
 };
 
+function accessor(column){
+  return function (d){
+    return d[column];
+  };
+}
 
-export default dataReduction;
+module.exports = dataReduction;

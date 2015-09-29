@@ -1,4 +1,4 @@
-var dataReduction = require("./data-reduction");
+var dataReduction = require("./index");
 var assert = require("assert");
 
 describe("data-reduction", function () {
