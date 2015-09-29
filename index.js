@@ -118,9 +118,16 @@ function dataReduction(data, options){
 
         dimension.accessor = binAccessor;
 
-        // The step metadata is exported for a HeatMap implementation to use.
-        // see https://gist.github.com/mbostock/3202354#file-index-html-L42
-        metadata[dimension.column] = { step: step };
+        metadata[dimension.column] = {
+
+          // The step metadata is exported for a Histogram or HeatMap implementation to use.
+          // see https://gist.github.com/mbostock/3202354#file-index-html-L42
+          step: step,
+
+          // The min and max depend on the nice tick interval computation,
+          // and are not the same as min/max of the original data.
+          domain: [min, max]
+        };
 
       }
     });
