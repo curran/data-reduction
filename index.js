@@ -100,9 +100,17 @@ function dataReduction(data, options){
 
         var rawAccessor = dimension.accessor;
 
+        // Accesses the value for the row "d" and assigns it to a
+        // histogram bin corresponding to nicely spaced tick mark intervals.
         var binAccessor = function(d){
+
+          // Access the original data value.
           var value = rawAccessor(d);
-          var normalized = (value - min) / span; // Varies between 0 and 1
+
+          // Normalize the value to fall between 0 and 1.
+          var normalized = (value - min) / span;
+
+          // Assign the value to one of the n histogram bins.
           var i = Math.floor(normalized * n);
 
           // Handle the special case of the max value,
@@ -111,6 +119,7 @@ function dataReduction(data, options){
             i--;
           }
 
+          // Return the value in data space that corresponds to the selected bin.
           return ticks[i];
         };
 
