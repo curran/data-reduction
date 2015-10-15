@@ -1,26 +1,21 @@
 var d3 = require("d3");
 
-function filter(data, predicates){
-  predicates.forEach(function (predicate){
-    var column = predicate.column;
-    if("min" in predicate){
-      var min = predicate.min;
-      data = data.filter(function (d){
-        return d[column] >= min;
-      });
-    }
-    if("max" in predicate){
-      var max = predicate.max;
-      data = data.filter(function (d){
-        return d[column] <= max;
-      });
-    }
-    if("equal" in predicate){
-      var equal = predicate.equal;
-      data = data.filter(function (d){
-        return d[column] == equal;
-      });
-    }
+var comparators = {
+  ">=": function (a, b){ return a >= b; }
+  // >
+  // ==
+  // !=
+};
+
+function filter(data, filters){
+  filters.forEach(function (filter){
+    var column = filter.column;
+    var value = filter.value;
+
+    var comparator = comparators[filter.predicate];
+    data = data.filter(function (d){
+      return comparator(d[column], value);
+    });
   });
   return data;
 }
@@ -74,8 +69,8 @@ function dataReduction(data, options){
 
   var metadata = {};
 
-  if("filter" in options){
-    data = filter(data, options.filter);
+  if("filters" in options){
+    data = filter(data, options.filters);
   }
 
   if("aggregate" in options){
