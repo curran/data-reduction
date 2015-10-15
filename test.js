@@ -23,16 +23,38 @@ describe("data-reduction", function () {
     { foo: "C", bar: 4 } // C sum = 20, count = 5
   ];
 
-  it("should compute filter (min, inclusive)", function() {
+  it("should compute filter >=", function() {
     var result = dataReduction(data1, {
       filters: [
         { column: "x", predicate: ">=", value: 5 }
       ]
     });
     assert.equal(result.data.length, 2);
+    assert(result.data[0].x >= 5);
+    assert(result.data[1].x >= 5);
   });
 
-  it("should compute filter (min, multiple fields)", function() {
+  it("should compute filter >", function() {
+    var result = dataReduction(data1, {
+      filters: [
+        { column: "x", predicate: ">", value: 5 }
+      ]
+    });
+    assert.equal(result.data.length, 1);
+  });
+
+  it("should compute filter <", function() {
+    var result = dataReduction(data1, {
+      filters: [
+        { column: "x", predicate: "<", value: 5 }
+      ]
+    });
+    assert.equal(result.data.length, 2);
+    assert(result.data[0].x < 5);
+    assert(result.data[1].x < 5);
+  });
+
+  it("should compute filter >= with multiple fields", function() {
     var result = dataReduction(data1, {
       filters: [
         { column: "x", predicate: ">=", value: 3 },
@@ -42,7 +64,7 @@ describe("data-reduction", function () {
     assert.equal(result.data.length, 2);
   });
 
-  it("should compute filter (max)", function() {
+  it("should compute filter <=", function() {
     var result = dataReduction(data1, {
       filters: [
         { column: "x", predicate: "<=", value: 3 }
@@ -51,7 +73,7 @@ describe("data-reduction", function () {
     assert.equal(result.data.length, 1);
   });
 
-  it("should compute filter (max, inclusive)", function() {
+  it("should compute filter <=", function() {
     var result = dataReduction(data1, {
       filters: [
         { column: "x", predicate: "<=", value: 5 }
@@ -60,7 +82,7 @@ describe("data-reduction", function () {
     assert.equal(result.data.length, 3);
   });
 
-  it("should compute filter (min & max)", function() {
+  it("should compute filter >= and <=, same field", function() {
     var result = dataReduction(data1, {
       filters: [
         { column: "x", predicate: ">=", value: 2 },
@@ -70,7 +92,7 @@ describe("data-reduction", function () {
     assert.equal(result.data.length, 2);
   });
 
-  it("should compute filter (min & max, multiple fields)", function() {
+  it("should compute filter >= and <=, multiple field", function() {
     var result = dataReduction(data1, {
       filters: [
         { column: "x", predicate: ">=", value: 1 },
@@ -82,7 +104,7 @@ describe("data-reduction", function () {
     assert.equal(result.data.length, 1);
   });
 
-  it("should compute filter (equal)", function() {
+  it("should compute filter ==", function() {
     var result = dataReduction(data2, {
       filters: [
         { column: "bar", predicate: "==", value: 6 }
@@ -91,6 +113,15 @@ describe("data-reduction", function () {
     assert.equal(result.data.length, 3);
     assert("foo" in result.data[0]);
     assert("bar" in result.data[0]);
+  });
+
+  it("should compute filter !=", function() {
+    var result = dataReduction(data2, {
+      filters: [
+        { column: "bar", predicate: "!=", value: 6 }
+      ]
+    });
+    assert.equal(result.data.length, 7);
   });
 
   it("should aggregate (count) over categories", function() {

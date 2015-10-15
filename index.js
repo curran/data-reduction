@@ -2,8 +2,11 @@ var d3 = require("d3");
 
 var comparators = {
   ">=": function (a, b){ return a >= b; },
+  ">":  function (a, b){ return a > b;  },
   "<=": function (a, b){ return a <= b; },
-  "==": function (a, b){ return a == b; }
+  "<":  function (a, b){ return a < b;  },
+  "==": function (a, b){ return a == b; },
+  "!=": function (a, b){ return a != b; }
   // >
   // ==
   // !=
