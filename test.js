@@ -92,7 +92,7 @@ describe("data-reduction", function () {
     assert.equal(result.data.length, 2);
   });
 
-  it("should compute filter >= and <=, multiple field", function() {
+  it("should compute filter >= and <=, multiple fields", function() {
     var result = dataReduction(data1, {
       filters: [
         { column: "x", predicate: ">=", value: 1 },
