@@ -7,9 +7,6 @@ var comparators = {
   "<":  function (a, b){ return a < b;  },
   "==": function (a, b){ return a == b; },
   "!=": function (a, b){ return a != b; }
-  // >
-  // ==
-  // !=
 };
 
 function filter(data, filters){
@@ -81,66 +78,25 @@ function dataReduction(data, options){
   if("aggregate" in options){
     options.aggregate.dimensions.forEach(function (dimension){
 
-      dimension.accessor = accessor(dimension.column);
-
       if(dimension.histogram){
 
-        var count = dimension.numBins + 1;
+        // Compute a binning scheme based on the data and dimension.
+        var binning = generateBinning(data, dimension.column, dimension.numBins);
 
-        var ticks = d3.scale.linear()
-          .domain(d3.extent(data, dimension.accessor))
-          .nice(count)
-          .ticks(count);
+        // This accessor returns the bin for a given row of data.
+        dimension.accessor = binning.accessor;
 
-        var n = ticks.length - 1;
-        var min = ticks[0];
-        var max = ticks[n];
-        var span = max - min;
-        var step = span / n;
-
-        var rawAccessor = dimension.accessor;
-
-        // Accesses the value for the row "d" and assigns it to a
-        // histogram bin corresponding to nicely spaced tick mark intervals.
-        var binAccessor = function(d){
-
-          // Access the original data value.
-          var value = rawAccessor(d);
-
-          // Normalize the value to fall between 0 and 1.
-          var normalized = (value - min) / span;
-
-          // Assign the value to one of the n histogram bins.
-          var i = Math.floor(normalized * n);
-
-          // Handle the special case of the max value,
-          // making the last bin inclusive of the max.
-          if( i === n ){
-            i--;
-          }
-
-          // Return the value in data space that corresponds to the selected bin.
-          return ticks[i];
-        };
-
-        dimension.accessor = binAccessor;
-
-        metadata[dimension.column] = {
-
-          // The step metadata is exported for a Histogram or HeatMap implementation to use.
-          // see https://gist.github.com/mbostock/3202354#file-index-html-L42
-          step: step,
-
-          // The min and max depend on the nice tick interval computation,
-          // and are not the same as min/max of the original data.
-          domain: [min, max]
-        };
-
+        // This metadata contains the span and computed (min, max) for histograms.
+        metadata[dimension.column] = binning.metadata;
+      } else {
+        dimension.accessor = accessor(dimension.column);
       }
     });
     data = aggregate(data, options.aggregate);
   }
 
+  // TODO document this data structure explicitly and reference it
+  // in the README of dsv-dataset and data-reduction.
   return {
     data: data,
     metadata: metadata
@@ -150,6 +106,60 @@ function dataReduction(data, options){
 function accessor(column){
   return function (d){
     return d[column];
+  };
+}
+
+function generateBinning(data, column, numBins){
+
+  var rawAccessor = accessor(column);
+  var count = numBins + 1;
+
+  var ticks = d3.scale.linear()
+    .domain(d3.extent(data, rawAccessor))
+    .nice(count)
+    .ticks(count);
+
+  var n = ticks.length - 1;
+  var min = ticks[0];
+  var max = ticks[n];
+  var span = max - min;
+  var step = span / n;
+
+  // Accesses the value for the row "d" and assigns it to a
+  // histogram bin corresponding to nicely spaced tick mark intervals.
+  var binAccessor = function(d){
+
+    // Access the original data value.
+    var value = rawAccessor(d);
+
+    // Normalize the value to fall between 0 and 1.
+    var normalized = (value - min) / span;
+
+    // Assign the value to one of the n histogram bins.
+    var i = Math.floor(normalized * n);
+
+    // Handle the special case of the max value,
+    // making the last bin inclusive of the max.
+    if( i === n ){
+      i--;
+    }
+
+    // Return the value in data space that corresponds to the selected bin.
+    return ticks[i];
+  };
+
+  return {
+    accessor: binAccessor,
+    metadata: {
+
+      // The step metadata is exported for a Histogram or HeatMap implementation to use.
+      // see https://gist.github.com/mbostock/3202354#file-index-html-L42
+      step: step,
+
+      // The min and max depend on the nice tick interval computation,
+      // and are not the same as min/max of the original data.
+      domain: [min, max]
+    }
   };
 }
 
