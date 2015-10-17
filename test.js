@@ -23,6 +23,20 @@ describe("data-reduction", function () {
     { foo: "C", bar: 4 } // C sum = 20, count = 5
   ];
 
+  var data3 = [
+
+    // 3 entries in the same hour.
+    { timestamp: new Date("2015-10-17T17:17:23") },
+    { timestamp: new Date("2015-10-17T17:18:23") },
+    { timestamp: new Date("2015-10-17T17:19:23") },
+
+    // 4 entries in the same day.
+    { timestamp: new Date("2015-10-18T17:19:23") },
+    { timestamp: new Date("2015-10-18T18:19:23") },
+    { timestamp: new Date("2015-10-18T19:19:23") },
+    { timestamp: new Date("2015-10-18T20:19:23") }
+  ];
+
   it("should compute filter >=", function() {
     var result = dataReduction(data1, {
       filters: [
@@ -161,6 +175,8 @@ describe("data-reduction", function () {
     });
 
     assert.equal(result.metadata.bar.step, 2);
+    assert.equal(result.metadata.bar.domain[0], 0);
+    assert.equal(result.metadata.bar.domain[1], 8);
 
     assert.deepEqual(result.data, [
       { bar: 0, total: 2 },
@@ -191,6 +207,25 @@ describe("data-reduction", function () {
     assert.equal(where(result, "bar", 6)[0].total, 3);
     assert.equal(where(result, "bar", 8)[0].total, 1);
   });
+
+  //it("should aggregate (count) over dates (days)", function() {
+  //  var result = dataReduction(data3, {
+  //    aggregate: {
+  //      dimensions: [{
+  //        column: "timestamp",
+  //        histogram: true,
+  //        timeInterval: "day"
+  //      }],
+  //      measures: [{
+  //        outColumn: "total", 
+  //        operator: "count"
+  //      }]
+  //    }
+  //  });
+
+  //  assert.equal(result.metadata.timestamp.interval, "day");
+  //  assert.equal(result.metadata.timestamp.interval, "day");
+  //});
 });
 
 function where(result, column, value){

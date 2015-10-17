@@ -25,7 +25,8 @@
   },
   "homepage": "https://github.com/curran/data-reduction",
   "dependencies": {
-    "d3": "^3.5.6"
+    "d3": "^3.5.6",
+    "d3-time": "0.0.5"
   },
   "devDependencies": {
     "mocha": "^2.2.5"

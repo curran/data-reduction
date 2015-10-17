@@ -1,5 +1,7 @@
 var d3 = require("d3");
 
+// These are the comparison types available to use as
+// the "predicate" property of filters.
 var comparators = {
   ">=": function (a, b){ return a >= b; },
   ">":  function (a, b){ return a > b;  },
@@ -13,7 +15,6 @@ function filter(data, filters){
   filters.forEach(function (filter){
     var column = filter.column;
     var value = filter.value;
-
     var comparator = comparators[filter.predicate];
     data = data.filter(function (d){
       return comparator(d[column], value);
@@ -81,12 +82,22 @@ function dataReduction(data, options){
       if(dimension.histogram){
 
         // Compute a binning scheme based on the data and dimension.
-        var binning = generateBinning(data, dimension.column, dimension.numBins);
+        var binning = generateNumericBinning(data, dimension.column, dimension.numBins);
 
         // This accessor returns the bin for a given row of data.
         dimension.accessor = binning.accessor;
 
         // This metadata contains the span and computed (min, max) for histograms.
+        metadata[dimension.column] = binning.metadata;
+      } else if(dimension.timeInterval){
+
+        var binning = generateTemporalBinning(data, dimension.column, dimension.timeInterval);
+
+        // This accessor returns the bin for a given row of data,
+        // returning the floor of its time interval as a JS Date object.
+        dimension.accessor = binning.accessor;
+
+        // This metadata contains the interval and computed (min, max).
         metadata[dimension.column] = binning.metadata;
       } else {
         dimension.accessor = accessor(dimension.column);
@@ -99,6 +110,8 @@ function dataReduction(data, options){
   // in the README of dsv-dataset and data-reduction.
   return {
     data: data,
+
+    // TODO make this the same metadata data structure as used by dsv-dataset.
     metadata: metadata
   };
 };
@@ -109,7 +122,7 @@ function accessor(column){
   };
 }
 
-function generateBinning(data, column, numBins){
+function generateNumericBinning(data, column, numBins){
 
   var rawAccessor = accessor(column);
   var count = numBins + 1;
