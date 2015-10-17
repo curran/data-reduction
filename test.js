@@ -1,5 +1,6 @@
 var dataReduction = require("./index");
 var assert = require("assert");
+var time = require("d3-time");
 
 describe("data-reduction", function () {
 
@@ -208,24 +209,24 @@ describe("data-reduction", function () {
     assert.equal(where(result, "bar", 8)[0].total, 1);
   });
 
-  //it("should aggregate (count) over dates (days)", function() {
-  //  var result = dataReduction(data3, {
-  //    aggregate: {
-  //      dimensions: [{
-  //        column: "timestamp",
-  //        histogram: true,
-  //        timeInterval: "day"
-  //      }],
-  //      measures: [{
-  //        outColumn: "total", 
-  //        operator: "count"
-  //      }]
-  //    }
-  //  });
+  it("should aggregate (count) over dates (days)", function() {
+    var result = dataReduction(data3, {
+      aggregate: {
+        dimensions: [{
+          column: "timestamp",
+          timeInterval: "day"
+        }],
+        measures: [{
+          outColumn: "total", 
+          operator: "count"
+        }]
+      }
+    });
 
-  //  assert.equal(result.metadata.timestamp.interval, "day");
-  //  assert.equal(result.metadata.timestamp.interval, "day");
-  //});
+    //console.log(JSON.stringify(result));
+    //assert.equal(result.metadata.timestamp.step, time.day);
+    //assert.equal(result.metadata.timestamp.interval, "day");
+  });
 });
 
 function where(result, column, value){

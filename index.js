@@ -1,4 +1,5 @@
 var d3 = require("d3");
+var time = require("d3-time");
 
 // These are the comparison types available to use as
 // the "predicate" property of filters.
@@ -172,6 +173,22 @@ function generateNumericBinning(data, column, numBins){
       // The min and max depend on the nice tick interval computation,
       // and are not the same as min/max of the original data.
       domain: [min, max]
+    }
+  };
+}
+function generateTemporalBinning(data, column, timeInterval){
+
+  var rawAccessor = accessor(column);
+  var interval = time[timeInterval];
+  var binAccessor = function(d){
+    return interval(rawAccessor(d));
+  };
+
+  return {
+    accessor: binAccessor,
+    metadata: {
+      step: interval,
+      domain: d3.extent(data, binAccessor)
     }
   };
 }
