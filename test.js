@@ -85,16 +85,17 @@ describe("data-reduction", function () {
     ChiasmDataset.validate(result).then(done, console.log);
   });
 
-  it("should compute filter >", function() {
+  it("should compute filter >", function(done) {
     var result = dataReduction(dataset1, {
       filters: [
         { column: "x", predicate: ">", value: 5 }
       ]
     });
     assert.equal(result.data.length, 1);
+    ChiasmDataset.validate(result).then(done, console.log);
   });
 
-  it("should compute filter <", function() {
+  it("should compute filter <", function(done) {
     var result = dataReduction(dataset1, {
       filters: [
         { column: "x", predicate: "<", value: 5 }
@@ -103,9 +104,10 @@ describe("data-reduction", function () {
     assert.equal(result.data.length, 2);
     assert(result.data[0].x < 5);
     assert(result.data[1].x < 5);
+    ChiasmDataset.validate(result).then(done, console.log);
   });
 
-  it("should compute filter >= with multiple fields", function() {
+  it("should compute filter >= with multiple fields", function(done) {
     var result = dataReduction(dataset1, {
       filters: [
         { column: "x", predicate: ">=", value: 3 },
@@ -113,27 +115,30 @@ describe("data-reduction", function () {
       ]
     });
     assert.equal(result.data.length, 2);
+    ChiasmDataset.validate(result).then(done, console.log);
   });
 
-  it("should compute filter <=", function() {
+  it("should compute filter <=", function(done) {
     var result = dataReduction(dataset1, {
       filters: [
         { column: "x", predicate: "<=", value: 3 }
       ]
     });
     assert.equal(result.data.length, 1);
+    ChiasmDataset.validate(result).then(done, console.log);
   });
 
-  it("should compute filter <=", function() {
+  it("should compute filter <=", function(done) {
     var result = dataReduction(dataset1, {
       filters: [
         { column: "x", predicate: "<=", value: 5 }
       ]
     });
     assert.equal(result.data.length, 3);
+    ChiasmDataset.validate(result).then(done, console.log);
   });
 
-  it("should compute filter >= and <=, same field", function() {
+  it("should compute filter >= and <=, same field", function(done) {
     var result = dataReduction(dataset1, {
       filters: [
         { column: "x", predicate: ">=", value: 2 },
@@ -141,9 +146,10 @@ describe("data-reduction", function () {
       ]
     });
     assert.equal(result.data.length, 2);
+    ChiasmDataset.validate(result).then(done, console.log);
   });
 
-  it("should compute filter >= and <=, multiple fields", function() {
+  it("should compute filter >= and <=, multiple fields", function(done) {
     var result = dataReduction(dataset1, {
       filters: [
         { column: "x", predicate: ">=", value: 1 },
@@ -153,9 +159,10 @@ describe("data-reduction", function () {
       ]
     });
     assert.equal(result.data.length, 1);
+    ChiasmDataset.validate(result).then(done, console.log);
   });
 
-  it("should compute filter ==", function() {
+  it("should compute filter ==", function(done) {
     var result = dataReduction(dataset2, {
       filters: [
         { column: "bar", predicate: "==", value: 6 }
@@ -164,15 +171,17 @@ describe("data-reduction", function () {
     assert.equal(result.data.length, 3);
     assert("foo" in result.data[0]);
     assert("bar" in result.data[0]);
+    ChiasmDataset.validate(result).then(done, console.log);
   });
 
-  it("should compute filter !=", function() {
+  it("should compute filter !=", function(done) {
     var result = dataReduction(dataset2, {
       filters: [
         { column: "bar", predicate: "!=", value: 6 }
       ]
     });
     assert.equal(result.data.length, 7);
+    ChiasmDataset.validate(result).then(done, console.log);
   });
 
   it("should aggregate (count) over categories", function() {
