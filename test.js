@@ -82,9 +82,7 @@ describe("data-reduction", function () {
     assert(result.data[0].x >= 5);
     assert(result.data[1].x >= 5);
 
-    done();
-    // TODO add this
-    //ChiasmDataset.validate(result).then(done, console.log);
+    ChiasmDataset.validate(result).then(done, console.log);
   });
 
   it("should compute filter >", function() {

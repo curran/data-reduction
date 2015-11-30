@@ -15,7 +15,8 @@ var comparators = {
   "!=": function (a, b){ return a != b; }
 };
 
-function filter(data, filters){
+function filter(dataset, filters){
+  var data = dataset.data;
   filters.forEach(function (filter){
     var column = filter.column;
     var value = filter.value;
@@ -24,11 +25,15 @@ function filter(data, filters){
       return comparator(d[column], value);
     });
   });
-  return data;
+  return {
+    data: data,
+    metadata: dataset.metadata
+  };
 }
 
-function aggregate(data, options){
+function aggregate(dataset, options){
 
+  var data = dataset.data;
   var dataByKey = {};
 
   function getRow(d, dimensions){
@@ -52,9 +57,14 @@ function aggregate(data, options){
     });
   });
 
-  return Object.keys(dataByKey).map(function (key){
-    return dataByKey[key];
-  });
+  return {
+    data: Object.keys(dataByKey).map(function (key){
+      return dataByKey[key];
+    }),
+    metadata: {
+      // TODO implement this and test
+    }
+  };
 }
 
 function makeKey(d, dimensions){
@@ -74,11 +84,10 @@ function makeRow(d, dimensions){
 // Implements a filter -> aggregate data flow.
 function dataReduction(dataset, options){
 
-  var data = dataset.data;
   var metadata = {};
 
   if("filters" in options){
-    data = filter(data, options.filters);
+    dataset = filter(dataset, options.filters);
   }
 
   if("aggregate" in options){
@@ -87,7 +96,7 @@ function dataReduction(dataset, options){
       if(dimension.histogram){
 
         // Compute a binning scheme based on the data and dimension.
-        var binning = generateNumericBinning(data, dimension.column, dimension.numBins);
+        var binning = generateNumericBinning(dataset.data, dimension.column, dimension.numBins);
 
         // This accessor returns the bin for a given row of data.
         dimension.accessor = binning.accessor;
@@ -96,7 +105,7 @@ function dataReduction(dataset, options){
         metadata[dimension.column] = binning.metadata;
       } else if(dimension.timeInterval){
 
-        var binning = generateTemporalBinning(data, dimension.column, dimension.timeInterval);
+        var binning = generateTemporalBinning(dataset.data, dimension.column, dimension.timeInterval);
 
         // This accessor returns the bin for a given row of data,
         // returning the floor of its time interval as a JS Date object.
@@ -108,13 +117,14 @@ function dataReduction(dataset, options){
         dimension.accessor = accessor(dimension.column);
       }
     });
-    data = aggregate(data, options.aggregate);
+    dataset = aggregate(dataset, options.aggregate);
+    dataset.metadata = metadata;
   }
 
-  var dataset = {
-    data: data,
-    metadata: metadata
-  };
+//  var dataset = {
+//    data: data,
+//    metadata: metadata
+//  };
 
   // Returns an instance of chiasm-dataset
   // See https://github.com/chiasm-project/chiasm-dataset#data-structure-reference
