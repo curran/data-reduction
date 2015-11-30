@@ -72,8 +72,9 @@ function makeRow(d, dimensions){
 }
 
 // Implements a filter -> aggregate data flow.
-function dataReduction(data, options){
+function dataReduction(dataset, options){
 
+  var data = dataset.data;
   var metadata = {};
 
   if("filters" in options){

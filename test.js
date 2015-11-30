@@ -1,45 +1,79 @@
 var dataReduction = require("./index");
 var assert = require("assert");
 var time = require("d3-time");
+var ChiasmDataset = require("chiasm-dataset");
 
 describe("data-reduction", function () {
 
-  var data1 = [
-    { x: 1, y: 3 },
-    { x: 5, y: 9 },
-    { x: 9, y: 5 },
-    { x: 4, y: 0 }
-  ];
+  var dataset1 = {
+    data: [
+      { x: 1, y: 3 },
+      { x: 5, y: 9 },
+      { x: 9, y: 5 },
+      { x: 4, y: 0 }
+    ],
+    metadata: {
+      columns: [
+        { name: "x", type: "number" },
+        { name: "y", type: "number" }
+      ]
+    }
+  };
 
-  var data2 = [
-    { foo: "A", bar: 1 },
-    { foo: "A", bar: 8 },
-    { foo: "A", bar: 6 }, // A sum = 15, count = 3
-    { foo: "B", bar: 4 },
-    { foo: "B", bar: 3 }, // B sum = 7, count = 2
-    { foo: "C", bar: 6 },
-    { foo: "C", bar: 1 },
-    { foo: "C", bar: 3 },
-    { foo: "C", bar: 6 },
-    { foo: "C", bar: 4 } // C sum = 20, count = 5
-  ];
+  var dataset2 = {
+    data: [
+      { foo: "A", bar: 1 },
+      { foo: "A", bar: 8 },
+      { foo: "A", bar: 6 }, // A sum = 15, count = 3
+      { foo: "B", bar: 4 },
+      { foo: "B", bar: 3 }, // B sum = 7, count = 2
+      { foo: "C", bar: 6 },
+      { foo: "C", bar: 1 },
+      { foo: "C", bar: 3 },
+      { foo: "C", bar: 6 },
+      { foo: "C", bar: 4 } // C sum = 20, count = 5
+    ],
+    metadata: {
+      columns: [
+        { name: "foo", type: "string" },
+        { name: "bar", type: "number" }
+      ]
+    }
+  };
 
-  var data3 = [
+  var dataset3 = {
+    data: [
 
-    // 3 entries in the same hour.
-    { timestamp: new Date("2015-10-17T17:17:23") },
-    { timestamp: new Date("2015-10-17T17:18:23") },
-    { timestamp: new Date("2015-10-17T17:19:23") },
+      // 3 entries in the same hour.
+      { timestamp: new Date("2015-10-17T17:17:23") },
+      { timestamp: new Date("2015-10-17T17:18:23") },
+      { timestamp: new Date("2015-10-17T17:19:23") },
 
-    // 4 entries in the same day.
-    { timestamp: new Date("2015-10-18T17:19:23") },
-    { timestamp: new Date("2015-10-18T18:19:23") },
-    { timestamp: new Date("2015-10-18T19:19:23") },
-    { timestamp: new Date("2015-10-18T20:19:23") }
-  ];
+      // 4 entries in the same day.
+      { timestamp: new Date("2015-10-18T17:19:23") },
+      { timestamp: new Date("2015-10-18T18:19:23") },
+      { timestamp: new Date("2015-10-18T19:19:23") },
+      { timestamp: new Date("2015-10-18T20:19:23") }
+    ],
+    metadata: {
+      columns: [
+        { name: "timestamp", type: "date" }
+      ]
+    }
+  };
 
-  it("should compute filter >=", function() {
-    var result = dataReduction(data1, {
+  it("validate input datasets", function(done) {
+    Promise.all([
+      ChiasmDataset.validate(dataset1),
+      ChiasmDataset.validate(dataset2),
+      ChiasmDataset.validate(dataset3)
+    ]).then(function (results){
+      done();
+    });
+  });
+
+  it("should compute filter >=", function(done) {
+    var result = dataReduction(dataset1, {
       filters: [
         { column: "x", predicate: ">=", value: 5 }
       ]
@@ -47,10 +81,14 @@ describe("data-reduction", function () {
     assert.equal(result.data.length, 2);
     assert(result.data[0].x >= 5);
     assert(result.data[1].x >= 5);
+
+    done();
+    // TODO add this
+    //ChiasmDataset.validate(result).then(done, console.log);
   });
 
   it("should compute filter >", function() {
-    var result = dataReduction(data1, {
+    var result = dataReduction(dataset1, {
       filters: [
         { column: "x", predicate: ">", value: 5 }
       ]
@@ -59,7 +97,7 @@ describe("data-reduction", function () {
   });
 
   it("should compute filter <", function() {
-    var result = dataReduction(data1, {
+    var result = dataReduction(dataset1, {
       filters: [
         { column: "x", predicate: "<", value: 5 }
       ]
@@ -70,7 +108,7 @@ describe("data-reduction", function () {
   });
 
   it("should compute filter >= with multiple fields", function() {
-    var result = dataReduction(data1, {
+    var result = dataReduction(dataset1, {
       filters: [
         { column: "x", predicate: ">=", value: 3 },
         { column: "y", predicate: ">=", value: 2 }
@@ -80,7 +118,7 @@ describe("data-reduction", function () {
   });
 
   it("should compute filter <=", function() {
-    var result = dataReduction(data1, {
+    var result = dataReduction(dataset1, {
       filters: [
         { column: "x", predicate: "<=", value: 3 }
       ]
@@ -89,7 +127,7 @@ describe("data-reduction", function () {
   });
 
   it("should compute filter <=", function() {
-    var result = dataReduction(data1, {
+    var result = dataReduction(dataset1, {
       filters: [
         { column: "x", predicate: "<=", value: 5 }
       ]
@@ -98,7 +136,7 @@ describe("data-reduction", function () {
   });
 
   it("should compute filter >= and <=, same field", function() {
-    var result = dataReduction(data1, {
+    var result = dataReduction(dataset1, {
       filters: [
         { column: "x", predicate: ">=", value: 2 },
         { column: "x", predicate: "<=", value: 6 }
@@ -108,7 +146,7 @@ describe("data-reduction", function () {
   });
 
   it("should compute filter >= and <=, multiple fields", function() {
-    var result = dataReduction(data1, {
+    var result = dataReduction(dataset1, {
       filters: [
         { column: "x", predicate: ">=", value: 1 },
         { column: "x", predicate: "<=", value: 6 },
@@ -120,7 +158,7 @@ describe("data-reduction", function () {
   });
 
   it("should compute filter ==", function() {
-    var result = dataReduction(data2, {
+    var result = dataReduction(dataset2, {
       filters: [
         { column: "bar", predicate: "==", value: 6 }
       ]
@@ -131,7 +169,7 @@ describe("data-reduction", function () {
   });
 
   it("should compute filter !=", function() {
-    var result = dataReduction(data2, {
+    var result = dataReduction(dataset2, {
       filters: [
         { column: "bar", predicate: "!=", value: 6 }
       ]
@@ -140,7 +178,7 @@ describe("data-reduction", function () {
   });
 
   it("should aggregate (count) over categories", function() {
-    var result = dataReduction(data2, {
+    var result = dataReduction(dataset2, {
       aggregate: {
         dimensions: [{
           column: "foo"
@@ -161,7 +199,7 @@ describe("data-reduction", function () {
   });
 
   it("should aggregate (count) over nice histogram bins", function() {
-    var result = dataReduction(data2, {
+    var result = dataReduction(dataset2, {
       aggregate: {
         dimensions: [{
           column: "bar",
@@ -188,7 +226,7 @@ describe("data-reduction", function () {
   });
 
   it("should aggregate (count) over distinct numeric values", function() {
-    var result = dataReduction(data2, {
+    var result = dataReduction(dataset2, {
       aggregate: {
         dimensions: [{
           column: "bar"
@@ -210,7 +248,7 @@ describe("data-reduction", function () {
   });
 
   it("should aggregate (count) over dates (days)", function() {
-    var result = dataReduction(data3, {
+    var result = dataReduction(dataset3, {
       aggregate: {
         dimensions: [{
           column: "timestamp",

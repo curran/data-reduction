@@ -30,6 +30,7 @@
     "d3-time": "0.0.7"
   },
   "devDependencies": {
+    "chiasm-dataset": "^0.1.0",
     "mocha": "^2.2.5"
   }
 }
