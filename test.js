@@ -3,7 +3,6 @@ var assert = require("assert");
 var time = require("d3-time");
 var ChiasmDataset = require("chiasm-dataset");
 
-// TODO move this into ChiasmDataset
 function getColumnMetadata(dataset, columnName){
   return dataset.metadata.columns.filter(function (column){
     return column.name === columnName;
@@ -245,7 +244,7 @@ describe("data-reduction", function () {
     ChiasmDataset.validate(result).then(done, console.log);
   });
 
-  it("should aggregate (count) over distinct numeric values", function() {
+  it("should aggregate (count) over distinct numeric values", function(done) {
     var result = dataReduction(dataset2, {
       aggregate: {
         dimensions: [{
@@ -265,9 +264,11 @@ describe("data-reduction", function () {
     assert.equal(where(result, "bar", 4)[0].total, 2);
     assert.equal(where(result, "bar", 6)[0].total, 3);
     assert.equal(where(result, "bar", 8)[0].total, 1);
+
+    ChiasmDataset.validate(result).then(done, console.log);
   });
 
-  it("should aggregate (count) over dates (days)", function() {
+  it("should aggregate (count) over dates (days)", function(done) {
     var result = dataReduction(dataset3, {
       aggregate: {
         dimensions: [{
@@ -283,6 +284,8 @@ describe("data-reduction", function () {
 
     var timeMetadata = getColumnMetadata(result, "timestamp");
     assert.equal(timeMetadata.interval, "day");
+
+    ChiasmDataset.validate(result).then(done, console.log);
   });
 });
 

@@ -111,6 +111,7 @@ function dataReduction(dataset, options){
 
         // This metadata contains the interval and computed (min, max).
         binning.metadata.name = dimension.column;
+        binning.metadata.type = "date";
         columns.push(binning.metadata);
       } else {
         dimension.accessor = accessor(dimension.column);
