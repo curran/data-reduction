@@ -1,5 +1,8 @@
-var d3 = require("d3");
-var time = require("d3-time");
+var d3 = {
+  scale: require("d3-scale"),
+  time: require("d3-time"),
+  extent: require("d3-arrays").extent
+};
 
 // These are the comparison types available to use as
 // the "predicate" property of filters.
@@ -179,7 +182,7 @@ function generateNumericBinning(data, column, numBins){
 function generateTemporalBinning(data, column, timeInterval){
 
   var rawAccessor = accessor(column);
-  var interval = time[timeInterval];
+  var interval = d3.time[timeInterval];
   var binAccessor = function(d){
     return interval(rawAccessor(d));
   };
