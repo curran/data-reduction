@@ -184,7 +184,7 @@ describe("data-reduction", function () {
     ChiasmDataset.validate(result).then(done, console.log);
   });
 
-  it("should aggregate (count) over categories", function() {
+  it("should aggregate (count) over categories", function(done) {
     var result = dataReduction(dataset2, {
       aggregate: {
         dimensions: [{
@@ -203,6 +203,10 @@ describe("data-reduction", function () {
     assert.equal(where(result, "foo", "B")[0].total, 2);
     assert.equal(where(result, "foo", "C")[0].total, 5);
     assert.equal(where(result, "foo", "A")[0].total, 3);
+
+    done();
+    // TODO add this
+    //ChiasmDataset.validate(result).then(done, console.log);
   });
 
   it("should aggregate (count) over nice histogram bins", function() {
@@ -220,9 +224,10 @@ describe("data-reduction", function () {
       }
     });
 
-    assert.equal(result.metadata.bar.interval, 2);
-    assert.equal(result.metadata.bar.domain[0], 0);
-    assert.equal(result.metadata.bar.domain[1], 8);
+    var barMetadata = result.metadata.bar;
+    assert.equal(barMetadata.interval, 2);
+    assert.equal(barMetadata.domain[0], 0);
+    assert.equal(barMetadata.domain[1], 8);
 
     assert.deepEqual(result.data, [
       { bar: 0, total: 2 },
@@ -268,9 +273,7 @@ describe("data-reduction", function () {
       }
     });
 
-    //console.log(JSON.stringify(result));
-    //assert.equal(result.metadata.timestamp.step, time.day);
-    //assert.equal(result.metadata.timestamp.interval, "day");
+    assert.equal(result.metadata.timestamp.interval, "day");
   });
 });
 

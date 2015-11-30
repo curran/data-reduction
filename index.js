@@ -103,6 +103,7 @@ function dataReduction(dataset, options){
 
         // This metadata contains the span and computed (min, max) for histograms.
         metadata[dimension.column] = binning.metadata;
+
       } else if(dimension.timeInterval){
 
         var binning = generateTemporalBinning(dataset.data, dimension.column, dimension.timeInterval);
@@ -201,7 +202,7 @@ function generateTemporalBinning(data, column, timeInterval){
   return {
     accessor: binAccessor,
     metadata: {
-      interval: interval,
+      interval: timeInterval,
       domain: d3.extent(data, binAccessor)
     }
   };
