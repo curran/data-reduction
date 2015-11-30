@@ -214,7 +214,7 @@ describe("data-reduction", function () {
     ChiasmDataset.validate(result).then(done, console.log);
   });
 
-  it("should aggregate (count) over nice histogram bins", function() {
+  it("should aggregate (count) over nice histogram bins", function(done) {
     var result = dataReduction(dataset2, {
       aggregate: {
         dimensions: [{
@@ -241,6 +241,8 @@ describe("data-reduction", function () {
       { bar: 4, total: 2 },
       { bar: 6, total: 4 }
     ]);
+
+    ChiasmDataset.validate(result).then(done, console.log);
   });
 
   it("should aggregate (count) over distinct numeric values", function() {

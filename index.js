@@ -98,6 +98,7 @@ function dataReduction(dataset, options){
 
         // This metadata contains the span and computed (min, max) for histograms.
         binning.metadata.name = dimension.column;
+        binning.metadata.type = "number";
         columns.push(binning.metadata);
 
       } else if(dimension.timeInterval){
