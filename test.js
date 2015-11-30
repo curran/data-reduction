@@ -3,6 +3,7 @@ var assert = require("assert");
 var time = require("d3-time");
 var ChiasmDataset = require("chiasm-dataset");
 
+// TODO move this into ChiasmDataset
 function getColumnMetadata(dataset, columnName){
   return dataset.metadata.columns.filter(function (column){
     return column.name === columnName;
@@ -210,9 +211,7 @@ describe("data-reduction", function () {
     assert.equal(where(result, "foo", "C")[0].total, 5);
     assert.equal(where(result, "foo", "A")[0].total, 3);
 
-    done();
-    // TODO add this
-    //ChiasmDataset.validate(result).then(done, console.log);
+    ChiasmDataset.validate(result).then(done, console.log);
   });
 
   it("should aggregate (count) over nice histogram bins", function() {

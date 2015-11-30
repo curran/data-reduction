@@ -113,10 +113,15 @@ function dataReduction(dataset, options){
         columns.push(binning.metadata);
       } else {
         dimension.accessor = accessor(dimension.column);
-        //columns.push({
-        //  name: dimension.name
-        //});
+        columns.push(getColumnMetadata(dataset, dimension.column));
       }
+    });
+
+    options.aggregate.measures.forEach(function (measure){
+      columns.push({
+        name: measure.outColumn,
+        type: "number"
+      });
     });
     dataset = {
       data: aggregate(dataset, options.aggregate),
@@ -211,6 +216,13 @@ function generateTemporalBinning(data, column, timeInterval){
       domain: d3.extent(data, binAccessor)
     }
   };
+}
+
+// TODO move this into ChiasmDataset
+function getColumnMetadata(dataset, columnName){
+  return dataset.metadata.columns.filter(function (column){
+    return column.name === columnName;
+  })[0];
 }
 
 module.exports = dataReduction;
