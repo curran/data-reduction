@@ -175,7 +175,7 @@ describe("data-reduction", function () {
       }
     });
 
-    assert.equal(result.metadata.bar.step, 2);
+    assert.equal(result.metadata.bar.interval, 2);
     assert.equal(result.metadata.bar.domain[0], 0);
     assert.equal(result.metadata.bar.domain[1], 8);
 
