@@ -3,6 +3,12 @@ var assert = require("assert");
 var time = require("d3-time");
 var ChiasmDataset = require("chiasm-dataset");
 
+function getColumnMetadata(dataset, columnName){
+  return dataset.metadata.columns.filter(function (column){
+    return column.name === columnName;
+  })[0];
+}
+
 describe("data-reduction", function () {
 
   var dataset1 = {
@@ -224,7 +230,8 @@ describe("data-reduction", function () {
       }
     });
 
-    var barMetadata = result.metadata.bar;
+    //console.log(JSON.stringify(result, null, 2));
+    var barMetadata = getColumnMetadata(result, "bar");
     assert.equal(barMetadata.interval, 2);
     assert.equal(barMetadata.domain[0], 0);
     assert.equal(barMetadata.domain[1], 8);
@@ -273,7 +280,8 @@ describe("data-reduction", function () {
       }
     });
 
-    assert.equal(result.metadata.timestamp.interval, "day");
+    var timeMetadata = getColumnMetadata(result, "timestamp");
+    assert.equal(timeMetadata.interval, "day");
   });
 });
 

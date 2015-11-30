@@ -57,14 +57,9 @@ function aggregate(dataset, options){
     });
   });
 
-  return {
-    data: Object.keys(dataByKey).map(function (key){
-      return dataByKey[key];
-    }),
-    metadata: {
-      // TODO implement this and test
-    }
-  };
+  return Object.keys(dataByKey).map(function (key){
+    return dataByKey[key];
+  });
 }
 
 function makeKey(d, dimensions){
@@ -84,13 +79,13 @@ function makeRow(d, dimensions){
 // Implements a filter -> aggregate data flow.
 function dataReduction(dataset, options){
 
-  var metadata = {};
-
   if("filters" in options){
     dataset = filter(dataset, options.filters);
   }
 
   if("aggregate" in options){
+
+    var columns = [];
     options.aggregate.dimensions.forEach(function (dimension){
 
       if(dimension.histogram){
@@ -102,7 +97,8 @@ function dataReduction(dataset, options){
         dimension.accessor = binning.accessor;
 
         // This metadata contains the span and computed (min, max) for histograms.
-        metadata[dimension.column] = binning.metadata;
+        binning.metadata.name = dimension.column;
+        columns.push(binning.metadata);
 
       } else if(dimension.timeInterval){
 
@@ -113,13 +109,22 @@ function dataReduction(dataset, options){
         dimension.accessor = binning.accessor;
 
         // This metadata contains the interval and computed (min, max).
-        metadata[dimension.column] = binning.metadata;
+        binning.metadata.name = dimension.column;
+        columns.push(binning.metadata);
       } else {
         dimension.accessor = accessor(dimension.column);
+        //columns.push({
+        //  name: dimension.name
+        //});
       }
     });
-    dataset = aggregate(dataset, options.aggregate);
-    dataset.metadata = metadata;
+    dataset = {
+      data: aggregate(dataset, options.aggregate),
+      metadata: {
+        isCube: true,
+        columns: columns
+      }
+    };
   }
 
 //  var dataset = {
