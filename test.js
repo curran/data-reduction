@@ -2,12 +2,7 @@ var dataReduction = require("./index");
 var assert = require("assert");
 var time = require("d3-time");
 var ChiasmDataset = require("chiasm-dataset");
-
-function getColumnMetadata(dataset, columnName){
-  return dataset.metadata.columns.filter(function (column){
-    return column.name === columnName;
-  })[0];
-}
+var getColumnMetadata = ChiasmDataset.getColumnMetadata;
 
 describe("data-reduction", function () {
 
