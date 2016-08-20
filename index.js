@@ -1,7 +1,7 @@
 var d3 = {
   scale: require("d3-scale"),
   time: require("d3-time"),
-  extent: require("d3-arrays").extent
+  extent: require("d3-array").extent
 };
 
 // These are the comparison types available to use as
@@ -155,7 +155,7 @@ function generateNumericBinning(data, column, numBins){
   var rawAccessor = accessor(column);
   var count = numBins + 1;
 
-  var ticks = d3.scale.linear()
+  var ticks = d3.scale.scaleLinear()
     .domain(d3.extent(data, rawAccessor))
     .nice(count)
     .ticks(count);

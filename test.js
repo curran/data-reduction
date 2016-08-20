@@ -192,7 +192,7 @@ describe("data-reduction", function () {
           column: "foo"
         }],
         measures: [{
-          outColumn: "total", 
+          outColumn: "total",
           operator: "count"
         }]
       }
@@ -217,7 +217,7 @@ describe("data-reduction", function () {
           numBins: 3
         }],
         measures: [{
-          outColumn: "total", 
+          outColumn: "total",
           operator: "count"
         }]
       }
@@ -246,7 +246,7 @@ describe("data-reduction", function () {
           column: "bar"
         }],
         measures: [{
-          outColumn: "total", 
+          outColumn: "total",
           operator: "count"
         }]
       }
@@ -268,17 +268,17 @@ describe("data-reduction", function () {
       aggregate: {
         dimensions: [{
           column: "timestamp",
-          timeInterval: "day"
+          timeInterval: "timeDay"
         }],
         measures: [{
-          outColumn: "total", 
+          outColumn: "total",
           operator: "count"
         }]
       }
     });
 
     var timeMetadata = getColumnMetadata(result, "timestamp");
-    assert.equal(timeMetadata.interval, "day");
+    assert.equal(timeMetadata.interval, "timeDay");
 
     ChiasmDataset.validate(result).then(done, console.log);
   });
