@@ -25,12 +25,12 @@
   },
   "homepage": "https://github.com/curran/data-reduction",
   "dependencies": {
-    "d3-arrays": "^0.4.0",
-    "d3-scale": "^0.1.5",
-    "d3-time": "0.0.7"
+    "d3-array": "^1.0.1",
+    "d3-scale": "^1.0.3",
+    "d3-time": "^1.0.2"
   },
   "devDependencies": {
     "chiasm-dataset": "^0.1.1",
-    "mocha": "^2.2.5"
+    "mocha": "^3.0.2"
   }
 }
